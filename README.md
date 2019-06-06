@@ -5,9 +5,12 @@ Introduction
 ------------
 
 - [Read more about HomeCredit's Challenge](https://www.facebook.com/myhomecreditvietnam/photos/a.1225490074197137/2491899987556133/?type=3&theater)
-- Simple application based on Firebase Database sample
+- Simple application use Firebase infrastructure
  
 
+Download link 
+-----------
+[Download link](app/build/outputs/apk/debug/app-debug.apk)
 
 Result
 -----------

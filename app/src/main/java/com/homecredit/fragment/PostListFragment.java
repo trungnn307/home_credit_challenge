@@ -22,6 +22,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.home.credit.challenge.R;
 import com.homecredit.PostDetailActivity;
+import com.homecredit.Utils.PrefUtils;
+import com.homecredit.models.Follower;
 import com.homecredit.models.Post;
 import com.homecredit.viewholder.PostViewHolder;
 
@@ -119,6 +121,9 @@ public abstract class PostListFragment extends Fragment {
                                 mDatabase.child("user-posts").child(model.uid).child(postRef.getKey());
 
 
+                        DatabaseReference followRef =
+                                mDatabase.child("user-posts").child(model.uid).child(postRef.getKey());
+
                         // Run two transactions
                         onStarClicked(globalPostRef, postRef.getKey());
                         onStarClicked(userPostRef, postRef.getKey());
@@ -138,7 +143,6 @@ public abstract class PostListFragment extends Fragment {
                 if (p == null) {
                     return Transaction.success(mutableData);
                 }
-
                 if (p.stars.containsKey(getUid())) {
                     // Unstar the post and remove self from stars
                     p.starCount = p.starCount - 1;
@@ -174,7 +178,7 @@ public abstract class PostListFragment extends Fragment {
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/stars/" + userId + "/" + refKey, postValues);
-
+        addToFollower(userId, p);
         mDatabase.updateChildren(childUpdates);
     }
 
@@ -185,7 +189,16 @@ public abstract class PostListFragment extends Fragment {
 
     }
 
-    // [END post_stars_transaction]
+
+    private void addToFollower(String userId, Post p) {
+        Follower follower = new Follower(userId, getPushToken());
+        Map<String, Object> postValues = follower.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/followers/" + p.uid + "/" + userId, postValues);
+
+        mDatabase.updateChildren(childUpdates);
+    }
 
 
     @Override
@@ -206,6 +219,10 @@ public abstract class PostListFragment extends Fragment {
 
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    public String getPushToken() {
+        return PrefUtils.getToken(getActivity());
     }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
