@@ -10,7 +10,7 @@ Introduction
 
 Download link 
 -----------
-[Download link](app/build/outputs/apk/debug/app-debug.apk)
+[Download link](app/HomeCredit_Challenge.apk)
 
 Result
 -----------
